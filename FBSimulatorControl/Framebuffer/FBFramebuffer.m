@@ -175,6 +175,10 @@ static IOSurfaceRef extractSurfaceFromUnknown(id unknown)
     if (![descriptor conformsToProtocol:@protocol(SimDisplayIOSurfaceRenderable)]) {
       continue;
     }
+    // On Xcode11, existance of descriptor.ioSurface must be checked, because some entries of ioClient.ioPorts conforms the protocols but doesn't work.
+    if (descriptor.ioSurface == nil) {
+      continue;
+    }
     return [[FBFramebuffer_IOClient alloc] initWithIOClient:ioClient port:port surface:descriptor logger:logger];
   }
   return [[FBSimulatorError
